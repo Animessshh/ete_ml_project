@@ -34,17 +34,41 @@ class ModelTrainer:
             
             models={
                 'Linear Regression': LinearRegression(),
-                'Lasso': Lasso(),
-                'Ridge':Ridge(),
-                'Support Vectors': SVR(),
-                'K Nearest Neighbors': KNeighborsRegressor(),
                 'Decision Tree': DecisionTreeRegressor(),
                 'Random Forest': RandomForestRegressor(),
-                'Ada Boost': AdaBoostRegressor(),
-                'XG Boost': XGBRegressor()
+                'AdaBoost Regressor': AdaBoostRegressor(),
+                'XGBRegressor': XGBRegressor()
             }
             
-            model_report:dict=evaluate_models(X_train,X_test,y_train,y_test,models)
+            params={
+                "Decision Tree": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    # 'splitter':['best','random'],
+                    # 'max_features':['sqrt','log2'],
+                },
+                "Random Forest":{
+                    # 'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                 
+                    # 'max_features':['sqrt','log2',None],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+
+                "Linear Regression":{},
+                "XGBRegressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+
+                "AdaBoost Regressor":{
+                    'learning_rate':[.1,.01,0.5,.001],
+                    # 'loss':['linear','square','exponential'],
+                    'n_estimators': [8,16,32,64,128,256]
+                }
+                
+            }
+            
+            
+            model_report:dict=evaluate_models(X_train,X_test,y_train,y_test,models,params)
             
             best_model_score=max(sorted(list(model_report.values())))
             
